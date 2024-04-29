@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.test</groupId>
     <artifactId>demo</artifactId>
@@ -71,7 +72,80 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 插入新的 Checkstyle 插件配置在这里 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId> <!-- 插件的组ID，指定这是一个 Maven 官方的插件 -->
+                <artifactId>maven-checkstyle-plugin</artifactId> <!-- 插件的artifactId，指定这是 Checkstyle 插件 -->
+                <version>3.2.2</version> <!-- 使用的插件版本 -->
+                <executions>
+                    <execution>
+                        <!-- 为什么在 validate 阶段执行将代码风格检查绑定到 validate
+                        阶段可以确保在构建进程的早期阶段就捕获到任何代码风格或规范的问题，从而防止这些问题影响后续的构建或发布过程。这样可以尽早修正问题，确保代码质量符合项目标准。 -->
+                        <phase>validate</phase> <!-- 插件绑定的生命周期阶段，这里是 validate 阶段，最早的验证阶段 -->
+                        <goals>
+                            <goal>check</goal> <!-- 执行的目标，这里是执行代码风格检查 -->
+                        </goals>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation> <!-- 指向 Checkstyle配置文件的位置 -->
+                            <encoding>UTF-8</encoding> <!-- 指定文件的编码格式，这里是 UTF-8 -->
+                            <consoleOutput>true</consoleOutput> <!-- 是否将输出结果打印到控制台 -->
+                            <failOnViolation>false</failOnViolation> <!--当发现风格违规时是否导致构建失败，false表示不会导致失败 -->
+                            <violationSeverity>warning</violationSeverity> <!--设置违规的最低严重级别为警告，低于此级别的违规将被忽略 -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 插入新的 PMD 插件配置在这里 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId> <!-- 插件的组织ID，指定是 Maven 的官方插件 -->
+                <artifactId>maven-pmd-plugin</artifactId> <!-- 插件的唯一标识，指定使用的是 PMD 插件 -->
+                <version>3.22.0</version> <!-- 指定插件的版本，这里使用的是 3.14.0 版本
+                最新的是3.22.0，可以去https://central.sonatype.com/search?q=PMD查看 -->
+                <configuration>
+                    <rulesets>
+                        <!-- <ruleset>/rulesets/java/quickstart.xml</ruleset> 规则集的路径，指定 PMD 使用的规则集文件 -->
+                        <ruleset>/my-pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <failOnViolation>false</failOnViolation> <!-- 设置为 false, 不在发现违规时失败构建 -->
+                    <verbose>true</verbose> <!-- 开启详细模式，增加输出的信息量 -->
+                    <printFailingErrors>true</printFailingErrors> <!-- 打印失败的错误信息 -->
+                    <linkXRef>true</linkXRef> <!-- 生成交叉引用链接，用于报告中提供源代码的直接链接 -->
+                    <includeTests>false</includeTests> <!-- 是否分析测试源代码，false 表示不分析 -->
+                    <sourceEncoding>UTF-8</sourceEncoding> <!-- 指定源代码的编码格式，这里使用 UTF-8 -->
+                    <minimumTokens>100</minimumTokens> <!-- 在进行代码复制检查时，定义识别为复制的最小令牌数 -->
+                    <!-- <suppressionFile>${project.basedir}/pmd-suppressions.xml</suppressionFile>
+                    指定抑制规则的文件，用于定义哪些违规可以被忽略 -->
+                    <printFailingErrors>true</printFailingErrors> <!-- 当检测到违规时，是否在控制台输出错误详情 -->
+                    <failurePriority>3</failurePriority> <!-- 设置导致构建失败的错误优先级阈值，优先级3及以上的错误会导致失败 -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase> <!-- 指定插件目标执行的生命周期阶段，这里是 verify 阶段 -->
+                        <goals>
+                            <goal>check</goal> <!-- 指定执行的目标，check 表示执行 PMD 检查 -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 插入新的 spotbugs 插件配置在这里 -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.8.4.0</version> <!-- 使用最新的版本或一个与你的项目兼容的版本 -->
+                <configuration>
+                    <effort>Max</effort> <!-- 设置 SpotBugs 分析的努力程度：Min, Default, Max -->
+                    <threshold>Low</threshold> <!-- 设置问题严重性的门槛：Low, Medium, High -->
+                    <failOnError>false</failOnError> <!-- 设置为 true 时，如果发现错误则使构建失败 -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase> <!-- 在 verify 阶段执行 SpotBugs -->
+                        <goals>
+                            <goal>check</goal> <!-- 执行 spotbugs 检查 -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 </project>
