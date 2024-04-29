@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <!-- 文件编码设置 -->
+    <property name="charset" value="UTF-8" />
+
+    <!-- 树形结构输出日志的详细程度 -->
+    <property name="severity" value="warning" />
+
+    <!-- 文件级检查 -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true" />
+    </module>
+
+    <!-- 检查所有Java源文件 -->
+    <module name="TreeWalker">
+        <!-- 确保使用的是Java 11的语法 -->
+        <property name="tabWidth" value="4" />
+
+        <!-- 检查大括号的位置 -->
+        <module name="LeftCurly">
+            <property name="severity" value="warning" />
+            <property name="option" value="nl" />
+        </module>
+        
+        <module name="LeftCurly">
+            <property name="option" value="nl"/>
+        </module>
+
+        <!-- 其他 TreeWalker 内的模块 -->
+    </module>
+</module>
