@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="Custom ruleset"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>A custom ruleset for PMD.</description>
+    <!-- FinalParameterInAbstract方法 
+    优先级：高（1）
+    将方法参数声明为接口方法的最终参数是无用的，因为实现可能会选择不尊重它。 -->
+    <rule ref="category/java/codestyle.xml/FinalParameterInAbstractMethod" />
+</ruleset>
